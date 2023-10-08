@@ -14,11 +14,13 @@
 struct GameData
 {
 	glm::vec2 rectPos = {100,100};
+	glm::vec2 rect = { 100,100 };
 
 }gameData;
 
 gl2d::Renderer2D renderer;
 gl2d::Texture t;
+gl2d::Texture at;
 gl2d::Font f;
 
 bool initGame()
@@ -30,10 +32,9 @@ bool initGame()
 	//loading the saved data. Loading an entire structure like this makes savind game data very easy.
 	platform::readEntireFile(RESOURCES_PATH "gameData.data", &gameData, sizeof(GameData));
 
-
-	t.loadFromFile(RESOURCES_PATH "test.jpg", true);
+	at.loadFromFile(RESOURCES_PATH "test.jpg", true);
+	t.loadFromFile(RESOURCES_PATH "test.png", true);
 	f.createFromFile(RESOURCES_PATH "roboto_black.ttf");
-
 	return true;
 }
 
@@ -56,25 +57,33 @@ bool gameLogic(float deltaTime)
 
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
-		gameData.rectPos.x -= deltaTime * 50;
+		// Define a velocidade do objeto para esquerda
+		gameData.rectPos.x -= deltaTime * 100;
+		
 	}
 	if (platform::isKeyHeld(platform::Button::Right))
 	{
-		gameData.rectPos.x += deltaTime * 50;
+		// Define a velocidade do objeto para direita
+		gameData.rectPos.x += deltaTime * 100;
 	}
 	if (platform::isKeyHeld(platform::Button::Up))
 	{
-		gameData.rectPos.y -= deltaTime * 50;
+		// Define a velocidade do objeto para cima
+		gameData.rectPos.y -= deltaTime * 100;
 	}
 	if (platform::isKeyHeld(platform::Button::Down))
 	{
-		gameData.rectPos.y += deltaTime * 50;
+		// Define a velocidade do objeto para baixo
+		gameData.rectPos.y += deltaTime * 100;
 	}
 
 	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 100});
-	renderer.renderRectangle({gameData.rectPos, 100, 100}, t);
+	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
+	// Define o tamanho da imagem
+	renderer.renderRectangle({gameData.rectPos, 180, 50}, t);
+	renderer.renderRectangle({ gameData.rect, 100, 100 }, at);
 
-	renderer.renderText({200, 200}, "Hello my first game", f, Colors_White);
+	//renderer.renderText({200, 200}, "Hello my first game", f, Colors_White);
 
 
 	renderer.flush();
