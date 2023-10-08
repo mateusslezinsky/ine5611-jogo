@@ -73,9 +73,6 @@ bool gameLogic(float deltaTime)
 	if (int(gameData.rectPos.x) == 0) {
 		helicopterSizes.sizeX = 0;
 	}
-	if (int(gameData.rectPos.x) == 400) {
-		helicopterSizes.sizeX = 0;
-	}
 	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == 400) {
 		helicopterSizes.sizeY = 0;
 	}
@@ -88,7 +85,6 @@ bool gameLogic(float deltaTime)
 		
 		
 		std::cout << "x: " + playerPosx + " ";
-		std::cout << w;
 		std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Right))
