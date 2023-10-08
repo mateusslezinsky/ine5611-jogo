@@ -9,10 +9,18 @@
 #include <sstream>
 #include "imfilebrowser.h"
 #include <gl2d/gl2d.h>
+#include <GLFW/glfw3.h>
+
+class HelicopterSize {
+public :
+	int sizeX = 180;
+	int sizeY = 100;
+};
 
 
 struct GameData
 {
+	// Posição dos objetos na tela
 	glm::vec2 rectPos = {100,100};
 	glm::vec2 rect = { 100,100 };
 
@@ -54,33 +62,64 @@ bool gameLogic(float deltaTime)
 
 #pragma endregion
 
+	HelicopterSize helicopterSizes = HelicopterSize();
+
+	// Declara as strings de posição (x e y) e converte-as do objeto original que era em outro formato (possivelmente float ou double)
+	std::string playerPosx = std::to_string(gameData.rectPos.x);
+	std::string playerPosy = std::to_string(gameData.rectPos.y);
+
+	helicopterSizes.sizeX = 180;
+
+	if (int(gameData.rectPos.x) == 0) {
+		helicopterSizes.sizeX = 0;
+	}
+	if (int(gameData.rectPos.x) == 400) {
+		helicopterSizes.sizeX = 0;
+	}
+	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == 400) {
+		helicopterSizes.sizeY = 0;
+	}
 
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
 		// Define a velocidade do objeto para esquerda
 		gameData.rectPos.x -= deltaTime * 100;
+		// Imprime no console
 		
+		
+		std::cout << "x: " + playerPosx + " ";
+		std::cout << w;
+		std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Right))
 	{
 		// Define a velocidade do objeto para direita
 		gameData.rectPos.x += deltaTime * 100;
+		// Imprime no console
+		std::cout << "x: " + playerPosx + " ";
+		std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Up))
 	{
 		// Define a velocidade do objeto para cima
 		gameData.rectPos.y -= deltaTime * 100;
+		// Imprime no console
+		std::cout << "x: " + playerPosx + " ";
+		std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Down))
 	{
 		// Define a velocidade do objeto para baixo
 		gameData.rectPos.y += deltaTime * 100;
+		// Imprime no console
+		std::cout << "x: " + playerPosx + " ";
+		std::cout << "y: " + playerPosy + "\n";
 	}
 
 	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 100});
 	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
 	// Define o tamanho da imagem
-	renderer.renderRectangle({gameData.rectPos, 180, 50}, t);
+	renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, t);
 	renderer.renderRectangle({ gameData.rect, 100, 100 }, at);
 
 	//renderer.renderText({200, 200}, "Hello my first game", f, Colors_White);
