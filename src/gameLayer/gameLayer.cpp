@@ -13,7 +13,7 @@
 
 class HelicopterSize {
 public :
-	int sizeX = 180;
+	int sizeX = 300;
 	int sizeY = 100;
 };
 
@@ -68,13 +68,11 @@ bool gameLogic(float deltaTime)
 	std::string playerPosx = std::to_string(gameData.rectPos.x);
 	std::string playerPosy = std::to_string(gameData.rectPos.y);
 
-	helicopterSizes.sizeX = 180;
-
-	if (int(gameData.rectPos.x) == 0) {
-		helicopterSizes.sizeX = 0;
-	}
-	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == 400) {
-		helicopterSizes.sizeY = 0;
+	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
+	//	helicopterSizes.sizeX = 0;
+	//}
+	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY()) - 100) {
+		std::exit(0);
 	}
 
 	if (platform::isKeyHeld(platform::Button::Left))
