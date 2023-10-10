@@ -10,6 +10,7 @@
 #include "imfilebrowser.h"
 #include <gl2d/gl2d.h>
 #include <GLFW/glfw3.h>
+#include "definitions.h"
 
 class HelicopterSize {
 public :
@@ -27,26 +28,27 @@ struct GameData
 
 }gameData;
 
-gl2d::Renderer2D renderer;
-gl2d::Texture t;
-gl2d::Texture at;
-gl2d::Font f;
+//gl2d::Renderer2D renderer;
+//gl2d::Texture t;
+//gl2d::Texture at;
+//gl2d::Font font;
 
 int points = 0;
+int option = 0;
 bool hasRun = true;
 
 bool initGame()
 {
 	//initializing stuff for the renderer
 	gl2d::init();
-	renderer.create();
+	definitions::renderer.create();
 
 	//loading the saved data. Loading an entire structure like this makes savind game data very easy.
 	platform::readEntireFile(RESOURCES_PATH "gameData.data", &gameData, sizeof(GameData));
 
-	at.loadFromFile(RESOURCES_PATH "test.jpg", false);
-	t.loadFromFile(RESOURCES_PATH "test.png", false);
-	f.createFromFile(RESOURCES_PATH "roboto_black.ttf");
+	definitions::at.loadFromFile(RESOURCES_PATH "test.jpg", false);
+	definitions::t.loadFromFile(RESOURCES_PATH "test.png", false);
+	definitions::font.createFromFile(RESOURCES_PATH "roboto_black.ttf");
 	return true;
 }
 
@@ -62,7 +64,7 @@ bool gameLogic(float deltaTime)
 	glViewport(0, 0, w, h);
 	glClear(GL_COLOR_BUFFER_BIT); //clear screen
 
-	renderer.updateWindowMetrics(w, h);
+	definitions::renderer.updateWindowMetrics(w, h);
 
 #pragma endregion
 
@@ -73,17 +75,15 @@ bool gameLogic(float deltaTime)
 	std::string playerPosy = std::to_string(gameData.rectPos.y);
 
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
-	//	helicopterSizes.sizeX = 0;
+	//	helicopterSizes.sizeX= 0;
 	//}
 	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY() - 100)) {
 		std::exit(0);
 	}
 	
-	
 	if (int(gameData.rectPos.x) == 300) {
 		points += 10;
 	}
-
 
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
@@ -118,21 +118,38 @@ bool gameLogic(float deltaTime)
 		//std::cout << "y: " + playerPosy + "\n";
 	}
 
+	// Verifica se o mouse esquerdo foi pressionado
+	definitions::setMousePosition();
+
+	if (platform::isLMousePressed()) {
+		definitions::setMousePosition();
+		bool posX = definitions::mousePos.mouseX >= definitions::menuItemsPos.easyCornerXLeft && definitions::mousePos.mouseX < definitions::menuItemsPos.easyCornerXRight;
+		bool posY = definitions::mousePos.mouseY >= definitions::menuItemsPos.easyCornerYLeft && definitions::mousePos.mouseY < definitions::menuItemsPos.easyCornerYRight;
+		if (posX && posY) {
+			std::cout << "Pressionou Facil \n";
+			option = 1;
+		}
+	}
+
+
 	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 100});
 	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 300,300 }, glm::vec2{ w - 100,h - 100 });
+
 	// Define o tamanho da imagem
-	renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, t);
-	renderer.renderRectangle({ gameData.rect, 50, 50 }, at);
 
-	std::string s = std::to_string(points);
-	char const* stringPoints = s.c_str();
+	//std::string s = std::to_string(points);
+	//char const* stringPoints = s.c_str();
+	if (option == 0) {
+		definitions::renderBaseMenu();
+	}else {
+		definitions::renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, definitions::t);
+		definitions::renderer.renderRectangle({ gameData.rect, 50, 50 }, definitions::at);
+		definitions::renderPoints(points);
+	}
+	//definitions::renderer.renderText({30, 30}, stringPoints, definitions::font, Colors_White, .5);
+	//definitions::renderer.renderText({ 250, 30 }, "Selecione o modo de jogo", definitions::font, Colors_White, .3);
 
-	renderer.renderText({30, 30}, stringPoints, f, Colors_White, .5);
-
-
-	renderer.flush();
-
-
+	definitions::renderer.flush();
 
 	//ImGui::ShowDemoWindow();
 
