@@ -13,16 +13,17 @@
 
 class HelicopterSize {
 public :
-	int sizeX = 300;
-	int sizeY = 100;
+	int sizeX = 90;
+	int sizeY = 30;
 };
+
 
 
 struct GameData
 {
 	// Posição dos objetos na tela
 	glm::vec2 rectPos = {100,100};
-	glm::vec2 rect = { 100,100 };
+	glm::vec2 rect = { 0,0 };
 
 }gameData;
 
@@ -30,6 +31,9 @@ gl2d::Renderer2D renderer;
 gl2d::Texture t;
 gl2d::Texture at;
 gl2d::Font f;
+
+int points = 0;
+bool hasRun = true;
 
 bool initGame()
 {
@@ -40,8 +44,8 @@ bool initGame()
 	//loading the saved data. Loading an entire structure like this makes savind game data very easy.
 	platform::readEntireFile(RESOURCES_PATH "gameData.data", &gameData, sizeof(GameData));
 
-	at.loadFromFile(RESOURCES_PATH "test.jpg", true);
-	t.loadFromFile(RESOURCES_PATH "test.png", true);
+	at.loadFromFile(RESOURCES_PATH "test.jpg", false);
+	t.loadFromFile(RESOURCES_PATH "test.png", false);
 	f.createFromFile(RESOURCES_PATH "roboto_black.ttf");
 	return true;
 }
@@ -71,52 +75,59 @@ bool gameLogic(float deltaTime)
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
 	//	helicopterSizes.sizeX = 0;
 	//}
-	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY()) - 100) {
+	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY() - 100)) {
 		std::exit(0);
 	}
+	
+	
+	if (int(gameData.rectPos.x) == 300) {
+		points += 10;
+	}
+
 
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
 		// Define a velocidade do objeto para esquerda
-		gameData.rectPos.x -= deltaTime * 100;
+		gameData.rectPos.x -= deltaTime * 200;
 		// Imprime no console
-		
-		
-		std::cout << "x: " + playerPosx + " ";
-		std::cout << "y: " + playerPosy + "\n";
+		//std::cout << "x: " + playerPosx + " ";
+		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Right))
 	{
 		// Define a velocidade do objeto para direita
-		gameData.rectPos.x += deltaTime * 100;
+		gameData.rectPos.x += deltaTime * 200;
 		// Imprime no console
-		std::cout << "x: " + playerPosx + " ";
-		std::cout << "y: " + playerPosy + "\n";
+		//std::cout << "x: " + playerPosx + " ";
+		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Up))
 	{
 		// Define a velocidade do objeto para cima
-		gameData.rectPos.y -= deltaTime * 100;
+		gameData.rectPos.y -= deltaTime * 200;
 		// Imprime no console
-		std::cout << "x: " + playerPosx + " ";
-		std::cout << "y: " + playerPosy + "\n";
+		//std::cout << "x: " + playerPosx + " ";
+		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Down))
 	{
 		// Define a velocidade do objeto para baixo
-		gameData.rectPos.y += deltaTime * 100;
+		gameData.rectPos.y += deltaTime * 200;
 		// Imprime no console
-		std::cout << "x: " + playerPosx + " ";
-		std::cout << "y: " + playerPosy + "\n";
+		//std::cout << "x: " + playerPosx + " ";
+		//std::cout << "y: " + playerPosy + "\n";
 	}
 
 	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 100});
-	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
+	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 300,300 }, glm::vec2{ w - 100,h - 100 });
 	// Define o tamanho da imagem
 	renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, t);
-	renderer.renderRectangle({ gameData.rect, 100, 100 }, at);
+	renderer.renderRectangle({ gameData.rect, 50, 50 }, at);
 
-	//renderer.renderText({200, 200}, "Hello my first game", f, Colors_White);
+	std::string s = std::to_string(points);
+	char const* stringPoints = s.c_str();
+
+	renderer.renderText({30, 30}, stringPoints, f, Colors_White, .5);
 
 
 	renderer.flush();
