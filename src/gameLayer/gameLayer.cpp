@@ -23,7 +23,7 @@ public :
 struct GameData
 {
 	// Posição dos objetos na tela
-	glm::vec2 rectPos = {100,100};
+	glm::vec2 rectPos = {0,0};
 	glm::vec2 rect = { 0,0 };
 
 }gameData;
@@ -46,7 +46,7 @@ bool initGame()
 	//loading the saved data. Loading an entire structure like this makes savind game data very easy.
 	platform::readEntireFile(RESOURCES_PATH "gameData.data", &gameData, sizeof(GameData));
 
-	definitions::at.loadFromFile(RESOURCES_PATH "test.jpg", false);
+	definitions::at.loadFromFile(RESOURCES_PATH "building.png", false);
 	definitions::t.loadFromFile(RESOURCES_PATH "test.png", false);
 	definitions::font.createFromFile(RESOURCES_PATH "roboto_black.ttf");
 	return true;
@@ -77,11 +77,11 @@ bool gameLogic(float deltaTime)
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
 	//	helicopterSizes.sizeX= 0;
 	//}
-	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY() - 100)) {
+	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY())) {
 		std::exit(0);
 	}
 	
-	if (int(gameData.rectPos.x) == 300) {
+	if (int(gameData.rectPos.x) == 350) {
 		points += 10;
 	}
 
@@ -132,8 +132,8 @@ bool gameLogic(float deltaTime)
 	}
 
 
-	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 100});
-	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 300,300 }, glm::vec2{ w - 100,h - 100 });
+	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
+	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h});
 
 	// Define o tamanho da imagem
 
@@ -142,8 +142,8 @@ bool gameLogic(float deltaTime)
 	if (option == 0) {
 		definitions::renderBaseMenu();
 	}else {
+		definitions::renderer.renderRectangle({ gameData.rect, 150, 150 }, definitions::at);
 		definitions::renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, definitions::t);
-		definitions::renderer.renderRectangle({ gameData.rect, 50, 50 }, definitions::at);
 		definitions::renderPoints(points);
 	}
 	//definitions::renderer.renderText({30, 30}, stringPoints, definitions::font, Colors_White, .5);
