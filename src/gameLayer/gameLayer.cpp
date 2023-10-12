@@ -77,7 +77,11 @@ bool gameLogic(float deltaTime)
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
 	//	helicopterSizes.sizeX= 0;
 	//}
-	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY()-40)) {
+	bool evalX = ((int(gameData.rectPos.x) >= 320) && (int(gameData.rectPos.x) < 330));
+	bool evalY = ((int(gameData.rectPos.y) >= 365) && (int(gameData.rectPos.y) < 380));
+
+
+	if (int(gameData.rectPos.y) == 0 || (int(gameData.rectPos.y) == (platform::getFrameBufferSizeY() - 40)) || (evalX && evalY)) {
 		std::exit(0);
 	}
 	
@@ -85,29 +89,23 @@ bool gameLogic(float deltaTime)
 		points += 10;
 	}
 
+	std::string objPosX = std::to_string(gameData.rect.x);
+	std::string objPosY = std::to_string(gameData.rect.y);
+
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
 		// Define a velocidade do objeto para esquerda
 		gameData.rectPos.x -= deltaTime * 200;
-		// Imprime no console
-		//std::cout << "x: " + playerPosx + " ";
-		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Right))
 	{
 		// Define a velocidade do objeto para direita
 		gameData.rectPos.x += deltaTime * 200;
-		// Imprime no console
-		//std::cout << "x: " + playerPosx + " ";
-		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Up))
 	{
 		// Define a velocidade do objeto para cima
 		gameData.rectPos.y -= deltaTime * 200;
-		// Imprime no console
-		//std::cout << "x: " + playerPosx + " ";
-		//std::cout << "y: " + playerPosy + "\n";
 	}
 	if (platform::isKeyHeld(platform::Button::Down))
 	{
