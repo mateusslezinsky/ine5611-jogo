@@ -77,7 +77,7 @@ bool gameLogic(float deltaTime)
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
 	//	helicopterSizes.sizeX= 0;
 	//}
-	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY())) {
+	if (int(gameData.rectPos.y) == 0 || int(gameData.rectPos.y) == (platform::getFrameBufferSizeY()-40)) {
 		std::exit(0);
 	}
 	
@@ -125,15 +125,25 @@ bool gameLogic(float deltaTime)
 		definitions::setMousePosition();
 		bool posX = definitions::mousePos.mouseX >= definitions::menuItemsPos.easyCornerXLeft && definitions::mousePos.mouseX < definitions::menuItemsPos.easyCornerXRight;
 		bool posY = definitions::mousePos.mouseY >= definitions::menuItemsPos.easyCornerYLeft && definitions::mousePos.mouseY < definitions::menuItemsPos.easyCornerYRight;
+		bool posYNormal = definitions::mousePos.mouseY >= definitions::menuItemsPos.easyCornerYLeft + 30 && definitions::mousePos.mouseY < definitions::menuItemsPos.easyCornerYRight + 30;
+		bool posYDificil = definitions::mousePos.mouseY >= definitions::menuItemsPos.easyCornerYLeft + 60 && definitions::mousePos.mouseY < definitions::menuItemsPos.easyCornerYRight + 60;
 		if (posX && posY) {
 			std::cout << "Pressionou Facil \n";
 			option = 1;
+		}
+		else if (posX && posYNormal) {
+			std::cout << "Pressionou Normal \n";
+			option = 2;
+		}
+		else if (posX && posYDificil) {
+			std::cout << "Pressionou Dificil \n";
+			option = 3;
 		}
 	}
 
 
 	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
-	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h});
+	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 40});
 
 	// Define o tamanho da imagem
 

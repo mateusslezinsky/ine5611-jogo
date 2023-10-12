@@ -37,6 +37,8 @@ namespace definitions {
 	{
 		renderer.renderText({ 250, 30 }, "Selecione o modo de jogo", font, Colors_White, .4);
 		renderer.renderText({ 250, 60 }, "Facil", font, Colors_White, .3);
+		renderer.renderText({ 250, 90 }, "Normal", font, Colors_White, .3);
+		renderer.renderText({ 250, 120 }, "Dificil", font, Colors_White, .3);
 	}
 	void handleSelectMenu() 
 	{
