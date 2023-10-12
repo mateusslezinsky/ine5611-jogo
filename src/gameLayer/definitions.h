@@ -8,6 +8,13 @@ namespace definitions {
 		int sizeY = 30;
 	}helicopterSizes;
 
+	struct AntiaircraftSizes
+	{
+		int sizeX = 120;
+		int sizeY = 50;
+	}
+	antiaircraftSizes;
+
 	struct MenuItemsPos {
 		int easyCornerXLeft = 230;
 		int easyCornerXRight = 270;
@@ -32,6 +39,8 @@ namespace definitions {
 	gl2d::Font font;
 	gl2d::Texture t;
 	gl2d::Texture at;
+	gl2d::Texture antiair;
+
 
 	void renderBaseMenu()
 	{

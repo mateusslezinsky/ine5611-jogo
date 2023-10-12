@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+ï»¿#define GLM_ENABLE_EXPERIMENTAL
 #include "gameLayer.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -11,9 +11,17 @@
 #include <gl2d/gl2d.h>
 #include <GLFW/glfw3.h>
 #include "definitions.h"
+#include <chrono>
+#include <thread>
 
 class HelicopterSize {
 public :
+	int sizeX = 90;
+	int sizeY = 30;
+};
+
+class AntiaircraftSize {
+public:
 	int sizeX = 90;
 	int sizeY = 30;
 };
@@ -22,9 +30,11 @@ public :
 
 struct GameData
 {
-	// Posição dos objetos na tela
+	// PosiÃ§Ã£o dos objetos na tela
 	glm::vec2 rectPos = {0,0};
 	glm::vec2 rect = { 0,0 };
+	glm::vec2 antiaircraftAPos = { 100, 100 };
+	glm::vec2 antiaircraftBPos = { 100, 100 };
 
 }gameData;
 
@@ -49,6 +59,10 @@ bool initGame()
 	definitions::at.loadFromFile(RESOURCES_PATH "building.png", false);
 	definitions::t.loadFromFile(RESOURCES_PATH "test.png", false);
 	definitions::font.createFromFile(RESOURCES_PATH "roboto_black.ttf");
+
+	// antiaircraft assets
+	definitions::antiair.loadFromFile(RESOURCES_PATH "antiaircraft.png", false);
+
 	return true;
 }
 
@@ -70,7 +84,11 @@ bool gameLogic(float deltaTime)
 
 	HelicopterSize helicopterSizes = HelicopterSize();
 
-	// Declara as strings de posição (x e y) e converte-as do objeto original que era em outro formato (possivelmente float ou double)
+	AntiaircraftSize antiaircraftSizes = AntiaircraftSize();
+
+
+
+	// Declara as strings de posiÃ§Ã£o (x e y) e converte-as do objeto original que era em outro formato (possivelmente float ou double)
 	std::string playerPosx = std::to_string(gameData.rectPos.x);
 	std::string playerPosy = std::to_string(gameData.rectPos.y);
 
@@ -156,6 +174,81 @@ bool gameLogic(float deltaTime)
 	}
 	//definitions::renderer.renderText({30, 30}, stringPoints, definitions::font, Colors_White, .5);
 	//definitions::renderer.renderText({ 250, 30 }, "Selecione o modo de jogo", definitions::font, Colors_White, .3);
+
+
+
+
+
+	
+	
+	
+	
+	////////////////////////// Logica do anti aereo 
+
+	// Lï¿½gica de movimento do antiaircraft A
+	static bool moveRightA = true;
+
+	if (moveRightA)
+	{
+		gameData.antiaircraftAPos.x += deltaTime * 50;
+		if (gameData.antiaircraftAPos.x > w - antiaircraftSizes.sizeX)
+		{
+			moveRightA = false;
+		}
+	}
+	else
+	{
+		gameData.antiaircraftAPos.x -= deltaTime * 50;
+		if (gameData.antiaircraftAPos.x < 0)
+		{
+			moveRightA = true;
+		}
+	}
+
+	// Renderize o antiaircraft A
+	definitions::renderer.renderRectangle({ gameData.antiaircraftAPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
+
+	// Lï¿½gica de movimento do antiaircraft B
+	static float moveSpeedB = 200.0f;
+	static bool moveRightB = true;
+
+	if (moveRightB)
+	{
+		gameData.antiaircraftBPos.x += deltaTime * moveSpeedB;
+		if (gameData.antiaircraftBPos.x > w - antiaircraftSizes.sizeX)
+		{
+			moveRightB = false;
+			moveSpeedB = std::uniform_real_distribution<float>(100, 300)(std::mt19937(std::random_device()()));
+		}
+	}
+	else
+	{
+		gameData.antiaircraftBPos.x -= deltaTime * moveSpeedB;
+		if (gameData.antiaircraftBPos.x < 0)
+		{
+			moveRightB = true;
+			moveSpeedB = std::uniform_real_distribution<float>(100, 300)(std::mt19937(std::random_device()()));
+		}
+	}
+
+	// Renderize o antiaircraft B
+	definitions::renderer.renderRectangle({ gameData.antiaircraftBPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
+
+	// Defina a coordenada Y dos antiaircrafts para ser a mesma
+	gameData.antiaircraftAPos.y = 400;
+	gameData.antiaircraftBPos.y = 400;
+
+	/////////////////////////// Fim da logica do anti aereo
+
+
+
+
+
+
+
+
+
+
 
 	definitions::renderer.flush();
 
