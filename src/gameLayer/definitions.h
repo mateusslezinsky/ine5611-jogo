@@ -22,6 +22,13 @@ namespace definitions {
 	}
 	buildingSizes;
 
+	struct GroundSizes
+	{
+		int sizeX = 0;
+		int sizeY = (platform::getFrameBufferSizeY() / 12) * 11;
+	}
+	groundSizes;
+
 	struct MenuItemsPos {
 		int easyCornerXLeft = 230;
 		int easyCornerXRight = 270;

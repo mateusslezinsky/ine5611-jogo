@@ -32,6 +32,12 @@ public:
 	int sizeY = (platform::getFrameBufferSizeY() / 20) * 13;
 };
 
+class GroundSize {
+public:
+	int sizeX = 0;
+	int sizeY = (platform::getFrameBufferSizeY() / 12) * 11;
+};
+
 
 struct GameData
 {
@@ -98,6 +104,8 @@ bool gameLogic(float deltaTime)
 
 	BuildingSize buildingSize = BuildingSize();
 
+	GroundSize groundSize = GroundSize();
+
 	// Declara as strings de posição (x e y) e converte-as do objeto original que era em outro formato (possivelmente float ou double)
 	std::string playerPosx = std::to_string(gameData.rectPos.x);
 	std::string playerPosy = std::to_string(gameData.rectPos.y);
@@ -105,17 +113,40 @@ bool gameLogic(float deltaTime)
 	//if (int(gameData.rectPos.x) == 0 || int(gameData.rectPos.x) == (platform::getFrameBufferSizeX()) - 100) {
 	//	helicopterSizes.sizeX= 0;
 	//}
+
 	bool evalX = ((int(gameData.rectPos.x) >= 320) && (int(gameData.rectPos.x) < 330));
 	bool evalY = ((int(gameData.rectPos.y) >= 365) && (int(gameData.rectPos.y) < 380));
+	bool buscou = false;
 
+	int hitboxAltura = (platform::getFrameBufferSizeY() / 20) * 7;
+	int hitboxChao = (platform::getFrameBufferSizeY() / 12) * 10;
 
-	if (int(gameData.rectPos.y) == 0 || (int(gameData.rectPos.y) == (platform::getFrameBufferSizeY() - 40)) || (evalX && evalY)) {
-		std::exit(0);
+	// hitbox chão e teto
+	if (int(gameData.rectPos.y) == 0 || (int(gameData.rectPos.y)) > hitboxChao || (evalX && evalY)) {
+		printf("Bateu");
+		gameData.rectPos.y = 300;
+		gameData.rectPos.x = 300;
+		points = 0;
+	}
+
+	// hitbox predios
+	if ((int(gameData.rectPos.x) >= (w - buildingSize.sizeX - helicopterSizes.sizeX) && int(gameData.rectPos.y) >= hitboxAltura) || (int(gameData.rectPos.x) <= (buildingSize.sizeX) && int(gameData.rectPos.y) >= hitboxAltura)) {
+		printf("Bateu");
+		gameData.rectPos.y = 300;
+		gameData.rectPos.x = 300;
+		points = 0;
 	}
 	
-	if (int(gameData.rectPos.x) == 350) {
+	if (int(gameData.rectPos.x) >= w - buildingSize.sizeX) {
+		buscou = true;
+	}
+
+	if ((int(gameData.rectPos.x) <= (platform::getFrameBufferSizeX() / 20) * 18) && buscou == true) {
+		buscou = false;
 		points += 10;
 	}
+
+	
 
 	std::string objPosX = std::to_string(gameData.buildingB.x);
 	std::string objPosY = std::to_string(gameData.buildingB.y);
@@ -169,9 +200,9 @@ bool gameLogic(float deltaTime)
 
 	gameData.buildingA = glm::clamp(gameData.buildingA, glm::vec2{ 0, h - buildingSize.sizeY }, glm::vec2{ 0, h - buildingSize.sizeY });
 	gameData.buildingB = glm::clamp(gameData.buildingB, glm::vec2{ w - buildingSize.sizeX, h - buildingSize.sizeY }, glm::vec2{ w - buildingSize.sizeX, h - buildingSize.sizeY });
-	gameData.ground = glm::clamp(gameData.ground, glm::vec2{ 0, (h / 12) * 11 }, glm::vec2{ w,h });
-	gameData.bridge = glm::clamp(gameData.bridge, glm::vec2{ (w / 10) * 2, (h / 12) * 10.8 }, glm::vec2{ w,h });
-	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 40});
+	gameData.ground = glm::clamp(gameData.ground, glm::vec2{ 0, (h / 12) * 11.2 }, glm::vec2{ 0, (h / 12) * 11.2 });
+	gameData.bridge = glm::clamp(gameData.bridge, glm::vec2{ (w / 10) * 1.5, (h / 12) * 11 }, glm::vec2{ (w / 10) * 1.5, (h / 12) * 11 });
+	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 40 });
 
 	// Define o tamanho da imagem
 
