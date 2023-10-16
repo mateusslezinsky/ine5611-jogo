@@ -16,14 +16,14 @@
 
 class HelicopterSize {
 public :
-	int sizeX = 90;
-	int sizeY = 30;
+	int sizeX = 120;
+	int sizeY = 40;
 };
 
 class AntiaircraftSize {
 public:
-	int sizeX = 90;
-	int sizeY = 30;
+	int sizeX = 120;
+	int sizeY = 120;
 };
 
 class BuildingSize {
@@ -217,6 +217,13 @@ bool gameLogic(float deltaTime)
 		definitions::renderer.renderRectangle({ gameData.bridge, w / 7, h / 12 }, definitions::bridge);
 		definitions::renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, definitions::t);
 		definitions::renderPoints(points);
+
+		// Renderize o antiaircraft A
+		definitions::renderer.renderRectangle({ gameData.antiaircraftAPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
+
+		// Renderize o antiaircraft B
+		definitions::renderer.renderRectangle({ gameData.antiaircraftBPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
+
 	}
 	//definitions::renderer.renderText({30, 30}, stringPoints, definitions::font, Colors_White, .5);
 	//definitions::renderer.renderText({ 250, 30 }, "Selecione o modo de jogo", definitions::font, Colors_White, .3);
@@ -251,9 +258,6 @@ bool gameLogic(float deltaTime)
 		}
 	}
 
-	// Renderize o antiaircraft A
-	definitions::renderer.renderRectangle({ gameData.antiaircraftAPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
-
 	// L�gica de movimento do antiaircraft B
 	static float moveSpeedB = 200.0f;
 	static bool moveRightB = true;
@@ -277,12 +281,9 @@ bool gameLogic(float deltaTime)
 		}
 	}
 
-	// Renderize o antiaircraft B
-	definitions::renderer.renderRectangle({ gameData.antiaircraftBPos, antiaircraftSizes.sizeX, antiaircraftSizes.sizeY }, definitions::antiair);
-
 	// Defina a coordenada Y dos antiaircrafts para ser a mesma
-	gameData.antiaircraftAPos.y = 400;
-	gameData.antiaircraftBPos.y = 400;
+	gameData.antiaircraftAPos.y = (h / 12) * 10.4;
+	gameData.antiaircraftBPos.y = (h / 12) * 10.4;
 
 	/////////////////////////// Fim da logica do anti aereo
 

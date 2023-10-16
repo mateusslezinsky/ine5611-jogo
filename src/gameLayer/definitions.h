@@ -4,14 +4,14 @@
 
 namespace definitions {
 	struct HelicopterSizes {
-		int sizeX = 90;
-		int sizeY = 30;
+		int sizeX = 120;
+		int sizeY = 40;
 	}helicopterSizes;
 
 	struct AntiaircraftSizes
 	{
 		int sizeX = 120;
-		int sizeY = 50;
+		int sizeY = 120;
 	}
 	antiaircraftSizes;	
 	
