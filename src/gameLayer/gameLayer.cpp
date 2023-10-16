@@ -66,7 +66,7 @@ bool initGame()
 
 	definitions::building.loadFromFile(RESOURCES_PATH "building.png", false);
 	definitions::bridge.loadFromFile(RESOURCES_PATH "bridge.png", false);
-	definitions::building.loadFromFile(RESOURCES_PATH "building.png", false);
+	definitions::ground.loadFromFile(RESOURCES_PATH "ground.png", false);
 	definitions::t.loadFromFile(RESOURCES_PATH "test.png", false);
 	definitions::font.createFromFile(RESOURCES_PATH "roboto_black.ttf");
 
