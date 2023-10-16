@@ -13,7 +13,14 @@ namespace definitions {
 		int sizeX = 120;
 		int sizeY = 50;
 	}
-	antiaircraftSizes;
+	antiaircraftSizes;	
+	
+	struct BuildingSizes
+	{
+		int sizeX = (platform::getFrameBufferSizeX() / 20) * 2;
+		int sizeY = (platform::getFrameBufferSizeY() / 20) * 13;
+	}
+	buildingSizes;
 
 	struct MenuItemsPos {
 		int easyCornerXLeft = 230;
@@ -38,7 +45,9 @@ namespace definitions {
 	gl2d::Renderer2D renderer;
 	gl2d::Font font;
 	gl2d::Texture t;
-	gl2d::Texture at;
+	gl2d::Texture building;
+	gl2d::Texture ground;
+	gl2d::Texture bridge;
 	gl2d::Texture antiair;
 
 

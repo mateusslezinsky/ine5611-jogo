@@ -26,15 +26,23 @@ public:
 	int sizeY = 30;
 };
 
+class BuildingSize {
+public:
+	int sizeX = (platform::getFrameBufferSizeX() / 20) * 2;
+	int sizeY = (platform::getFrameBufferSizeY() / 20) * 13;
+};
 
 
 struct GameData
 {
 	// Posição dos objetos na tela
 	glm::vec2 rectPos = {0,0};
-	glm::vec2 rect = { 0,0 };
+	glm::vec2 buildingA = { 0, 0 };
+	glm::vec2 buildingB = { 0, 0 };
 	glm::vec2 antiaircraftAPos = { 100, 100 };
 	glm::vec2 antiaircraftBPos = { 100, 100 };
+	glm::vec2 bridge = { 0, 0 };
+	glm::vec2 ground = { 0, 0 };
 
 }gameData;
 
@@ -56,7 +64,9 @@ bool initGame()
 	//loading the saved data. Loading an entire structure like this makes savind game data very easy.
 	platform::readEntireFile(RESOURCES_PATH "gameData.data", &gameData, sizeof(GameData));
 
-	definitions::at.loadFromFile(RESOURCES_PATH "building.png", false);
+	definitions::building.loadFromFile(RESOURCES_PATH "building.png", false);
+	definitions::bridge.loadFromFile(RESOURCES_PATH "bridge.png", false);
+	definitions::building.loadFromFile(RESOURCES_PATH "building.png", false);
 	definitions::t.loadFromFile(RESOURCES_PATH "test.png", false);
 	definitions::font.createFromFile(RESOURCES_PATH "roboto_black.ttf");
 
@@ -86,7 +96,7 @@ bool gameLogic(float deltaTime)
 
 	AntiaircraftSize antiaircraftSizes = AntiaircraftSize();
 
-
+	BuildingSize buildingSize = BuildingSize();
 
 	// Declara as strings de posição (x e y) e converte-as do objeto original que era em outro formato (possivelmente float ou double)
 	std::string playerPosx = std::to_string(gameData.rectPos.x);
@@ -107,8 +117,8 @@ bool gameLogic(float deltaTime)
 		points += 10;
 	}
 
-	std::string objPosX = std::to_string(gameData.rect.x);
-	std::string objPosY = std::to_string(gameData.rect.y);
+	std::string objPosX = std::to_string(gameData.buildingB.x);
+	std::string objPosY = std::to_string(gameData.buildingB.y);
 
 	if (platform::isKeyHeld(platform::Button::Left))
 	{
@@ -157,8 +167,10 @@ bool gameLogic(float deltaTime)
 		}
 	}
 
-
-	gameData.rect = glm::clamp(gameData.rect, glm::vec2{ 0,0 }, glm::vec2{ w - 100,h - 100 });
+	gameData.buildingA = glm::clamp(gameData.buildingA, glm::vec2{ 0, h - buildingSize.sizeY }, glm::vec2{ 0, h - buildingSize.sizeY });
+	gameData.buildingB = glm::clamp(gameData.buildingB, glm::vec2{ w - buildingSize.sizeX, h - buildingSize.sizeY }, glm::vec2{ w - buildingSize.sizeX, h - buildingSize.sizeY });
+	gameData.ground = glm::clamp(gameData.ground, glm::vec2{ 0, (h / 12) * 11 }, glm::vec2{ w,h });
+	gameData.bridge = glm::clamp(gameData.bridge, glm::vec2{ (w / 10) * 2, (h / 12) * 10.8 }, glm::vec2{ w,h });
 	gameData.rectPos = glm::clamp(gameData.rectPos, glm::vec2{0,0}, glm::vec2{w - 100,h - 40});
 
 	// Define o tamanho da imagem
@@ -168,7 +180,10 @@ bool gameLogic(float deltaTime)
 	if (option == 0) {
 		definitions::renderBaseMenu();
 	}else {
-		definitions::renderer.renderRectangle({ gameData.rect, 150, 150 }, definitions::at);
+		definitions::renderer.renderRectangle({ gameData.buildingA, buildingSize.sizeX, buildingSize.sizeY }, definitions::building);
+		definitions::renderer.renderRectangle({ gameData.buildingB, buildingSize.sizeX, buildingSize.sizeY }, definitions::building);
+		definitions::renderer.renderRectangle({ gameData.ground, w, h / 12 }, definitions::ground);
+		definitions::renderer.renderRectangle({ gameData.bridge, w / 7, h / 12 }, definitions::bridge);
 		definitions::renderer.renderRectangle({gameData.rectPos, helicopterSizes.sizeX, helicopterSizes.sizeY}, definitions::t);
 		definitions::renderPoints(points);
 	}
